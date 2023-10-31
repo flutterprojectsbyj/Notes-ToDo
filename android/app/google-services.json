@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599732335315",
+    "project_id": "notestodo-eef00",
+    "storage_bucket": "notestodo-eef00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599732335315:android:72949b039b6702d99b5a26",
+        "android_client_info": {
+          "package_name": "com.jmpfbmx.notes_todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA13_I3X3HgwgXOUwqh6TH7yj1gBZtXTI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
