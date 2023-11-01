@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes_todo/models/model.dart';
 import 'package:notes_todo/widgets/custom_modal_bottom_sheet.dart';
+import 'package:notes_todo/widgets/note_card.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/modal_bottom_list_item.dart';
@@ -37,6 +39,9 @@ class _NotesToDoState extends State<NotesToDo> {
             context: context,
             builder: (context) => AlertDialog(
               title: const Text("Are you sure you want to exit from NotesToDo?"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               actions: <Widget>[
                 ElevatedButton(
                   onPressed: () {
@@ -66,9 +71,31 @@ class _NotesToDoState extends State<NotesToDo> {
           );
           return result;
         },
-        child: const Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+            const Text(
+              "Your recent Notes",
+            ),
+            const SizedBox(height: 20.0,),
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance.collection("notes${model.auth.currentUser?.email}").snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return GridView(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                      children: snapshot.data!.docs.map((note) => noteCard(() { }, note)).toList(),
+                    );
+                  }
+                }
+              ),
+            ),
           ],
         ),
       ),
