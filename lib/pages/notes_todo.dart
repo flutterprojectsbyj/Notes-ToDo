@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes_todo/models/model.dart';
+import 'package:notes_todo/pages/notes/notes_editor.dart';
 import 'package:notes_todo/widgets/custom_modal_bottom_sheet.dart';
 import 'package:notes_todo/widgets/note_card.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +91,15 @@ class _NotesToDoState extends State<NotesToDo> {
                   } else {
                     return GridView(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                      children: snapshot.data!.docs.map((note) => noteCard(() { }, note)).toList(),
+                      children: snapshot.data!.docs.map((note) => noteCard(() {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return NotesEditor(doc: note);
+                            }
+                          )
+                        ); 
+                      }, note)).toList(),
                     );
                   }
                 }
