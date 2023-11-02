@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes_todo/models/model.dart';
 import 'package:notes_todo/pages/notes/notes_editor.dart';
+import 'package:notes_todo/pages/notes/todo_editor.dart';
 import 'package:notes_todo/widgets/custom_modal_bottom_sheet.dart';
 import 'package:notes_todo/widgets/note_card.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/modal_bottom_list_item.dart';
+import 'package:notes_todo/widgets/modal_bottom_list_item.dart';
+import 'package:notes_todo/widgets/todo_card.dart';
 
 class NotesToDo extends StatefulWidget {
   const NotesToDo({super.key});
@@ -76,9 +78,6 @@ class _NotesToDoState extends State<NotesToDo> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Your recent Notes",
-            ),
             const SizedBox(height: 20.0,),
             Expanded(
               child: StreamBuilder(
@@ -91,15 +90,24 @@ class _NotesToDoState extends State<NotesToDo> {
                   } else {
                     return GridView(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                      children: snapshot.data!.docs.map((note) => noteCard(() {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return NotesEditor(doc: note);
-                            }
-                          )
-                        ); 
-                      }, note)).toList(),
+                      children: snapshot.data!.docs.map((note) =>
+                        (note["content"] is String) ? noteCard(() {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return NotesEditor(doc: note);
+                              }
+                            )
+                          );
+                        }, note) : todoCard(() {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return ToDoEditor(doc: note);
+                                  }
+                              )
+                          );
+                        }, note)).toList(),
                     );
                   }
                 }

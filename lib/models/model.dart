@@ -139,4 +139,13 @@ class Model extends ChangeNotifier {
       "colorId": colorId,
     });
   }
+
+  modifyTask(String docId, String title, List content, List completed, int colorId) async {
+    await fbStore.collection("notes${auth.currentUser?.email}").doc(docId).update({
+      "title": title,
+      "content": content,
+      "completed": completed,
+      "colorId": colorId,
+    });
+  }
 }
