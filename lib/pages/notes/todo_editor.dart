@@ -154,7 +154,7 @@ class _ToDoEditorState extends State<ToDoEditor> {
                       title: TextField(
                         controller: _contentTextControllerList[index],
                         focusNode: (_contentTextControllerList[index] == _contentTextControllerList.last) ? _lastFocusNode : null,
-                        style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[colorId])),
+                        style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[colorId]), decoration: (_completedList[index]) ? TextDecoration.lineThrough : TextDecoration.none),
                         onSubmitted: (value) {
                           FocusScope.of(context).unfocus();
                         },

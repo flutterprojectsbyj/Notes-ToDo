@@ -50,8 +50,7 @@ Widget todoCard(Function()? onTap, QueryDocumentSnapshot doc, bool showNoteAsGri
                       ),
                       title: Text(
                         doc["content"][index],
-                        style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])),
-                      ),
+                        style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]]), decoration: (doc["completed"][index]) ? TextDecoration.lineThrough : TextDecoration.none),                      ),
                     ),
                   );
                 }
