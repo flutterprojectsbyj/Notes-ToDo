@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import 'package:notes_todo/widgets/modal_bottom_list_item.dart';
 import 'package:notes_todo/widgets/todo_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesToDo extends StatefulWidget {
   const NotesToDo({super.key});
@@ -24,6 +25,26 @@ class NotesToDo extends StatefulWidget {
 }
 
 class _NotesToDoState extends State<NotesToDo> {
+  bool showNoteAsGridView = false;
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  _loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      showNoteAsGridView = prefs.getBool('showNoteAsGridView') ?? false;
+    });
+  }
+
+  _savePreferences() {
+    prefs.setBool('showNoteAsGridView', showNoteAsGridView);
+  }
+
   @override
   Widget build(BuildContext context) {
     var model = context.watch<Model>();
@@ -33,8 +54,13 @@ class _NotesToDoState extends State<NotesToDo> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {  },
-            icon: const Icon(Icons.view_agenda_outlined), // Icons.grid_view
+            onPressed: () {
+              setState(() {
+                showNoteAsGridView = !showNoteAsGridView;
+              });
+              _savePreferences();
+            },
+            icon: Icon((showNoteAsGridView) ? Icons.view_agenda_outlined : Icons.grid_view),
           ),
         ],
       ),
@@ -114,7 +140,7 @@ class _NotesToDoState extends State<NotesToDo> {
                     );
                   } else {
                     return GridView(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (showNoteAsGridView) ? 2 : 1),
                       children: snapshot.data!.docs.map((note) =>
                         (note["content"] is String) ? noteCard(() {
                           Navigator.of(context).push(
@@ -132,7 +158,7 @@ class _NotesToDoState extends State<NotesToDo> {
                                   }
                               )
                           );
-                        }, note)).toList(),
+                        }, note, showNoteAsGridView)).toList(),
                     );
                   }
                 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_todo/style/card_style.dart';
 
-Widget todoCard(Function()? onTap, QueryDocumentSnapshot doc) {
+Widget todoCard(Function()? onTap, QueryDocumentSnapshot doc, bool showNoteAsGridView) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -26,34 +26,36 @@ Widget todoCard(Function()? onTap, QueryDocumentSnapshot doc) {
             style: CardStyle.date.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])),
           ),
           const SizedBox(height: 8.0,),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return ListTileTheme(
-                  contentPadding: const EdgeInsets.all(0), // Remove all padding
-                  dense: true,
-                  horizontalTitleGap: 0.0,
-                  child: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                    onChanged: (bool? value) {  },
-                    value: doc["completed"][index],
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(
-                          width: 1.0,
-                          color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: (showNoteAsGridView) ? 3 : doc["completed"].length,
+                itemBuilder: (context, index) {
+                  return ListTileTheme(
+                    contentPadding: const EdgeInsets.all(0), // Remove all padding
+                    dense: true,
+                    horizontalTitleGap: 0.0,
+                    child: CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                      onChanged: (bool? value) {  },
+                      value: doc["completed"][index],
+                      checkColor: Colors.white,
+                      activeColor: Colors.green,
+                      side: MaterialStateBorderSide.resolveWith(
+                            (states) => BorderSide(
+                            width: 1.0,
+                            color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])
+                        ),
+                      ),
+                      title: Text(
+                        doc["content"][index],
+                        style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])),
                       ),
                     ),
-                    title: Text(
-                      doc["content"][index],
-                      style: CardStyle.content.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])),
-                    ),
-                  ),
-                );
-              }
+                  );
+                }
+            ),
           ),
         ],
       ),

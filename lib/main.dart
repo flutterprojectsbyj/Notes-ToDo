@@ -5,6 +5,7 @@ import 'package:notes_todo/models/model.dart';
 import 'package:notes_todo/pages/auth_page.dart';
 import 'package:notes_todo/resources/firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +20,27 @@ void main() async {
   );
 }
 
-class Init extends StatelessWidget {
+class Init extends StatefulWidget {
   final AdaptiveThemeMode? savedThemeMode;
   const Init({super.key, required this.savedThemeMode});
+
+  @override
+  State<Init> createState() => _InitState();
+}
+
+class _InitState extends State<Init> {
+  @override
+  void initState() {
+    super.initState();
+    sharedPrefs();
+  }
+
+  sharedPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getBool("showNoteAsGridView") == null) {
+      prefs.setBool("showNoteAsGridView", true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +83,13 @@ class Init extends StatelessWidget {
             iconColor: Colors.white,
           ),
       ),
-      initial: savedThemeMode ?? AdaptiveThemeMode.dark,
+      initial: widget.savedThemeMode ?? AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: theme,
         darkTheme: darkTheme,
-        home: LoginRegister(savedThemeMode: savedThemeMode),
+        home: LoginRegister(savedThemeMode: widget.savedThemeMode),
       ),
     );
   }
