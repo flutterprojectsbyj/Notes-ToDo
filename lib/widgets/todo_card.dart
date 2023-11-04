@@ -22,7 +22,7 @@ Widget todoCard(Function()? onTap, QueryDocumentSnapshot doc) {
           ),
           const SizedBox(height: 4.0,),
           Text(
-            DateFormat("dd/MM/yyy HH:mm a").format((doc["date"].toDate())).toString(),
+            doc['date'] != null ? DateFormat("dd/MM/yyy HH:mm a").format((doc["date"].toDate())).toString() : "",
             style: CardStyle.date.copyWith(color: CardStyle.getTextColorForBackground(CardStyle.cardColors[doc["colorId"]])),
           ),
           const SizedBox(height: 8.0,),
