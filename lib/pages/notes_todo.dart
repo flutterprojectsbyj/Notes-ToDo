@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes_todo/models/model.dart';
+import 'package:notes_todo/pages/about.dart';
 import 'package:notes_todo/pages/notes/notes_creator.dart';
 import 'package:notes_todo/pages/notes/notes_editor.dart';
 import 'package:notes_todo/pages/notes/todo_creator.dart';
@@ -36,7 +37,29 @@ class _NotesToDoState extends State<NotesToDo> {
             icon: const Icon(Icons.view_agenda_outlined), // Icons.grid_view
           ),
         ],
-        automaticallyImplyLeading: false,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          shrinkWrap: true,
+          controller: ScrollController(),
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text("Home"),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text("About"),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AboutPage(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: WillPopScope(
         onWillPop: () async {
