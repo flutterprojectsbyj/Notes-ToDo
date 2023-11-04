@@ -167,4 +167,8 @@ class Model extends ChangeNotifier {
       "colorId": colorId,
     });
   }
+
+  deleteNoteToDo(String docId) async {
+    await fbStore.collection("notes${auth.currentUser?.email}").doc(docId).delete();
+  }
 }

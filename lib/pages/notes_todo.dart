@@ -142,23 +142,85 @@ class _NotesToDoState extends State<NotesToDo> {
                     return GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (showNoteAsGridView) ? 2 : 1),
                       children: snapshot.data!.docs.map((note) =>
-                        (note["content"] is String) ? noteCard(() {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return NotesEditor(doc: note);
-                              }
-                            )
-                          );
-                        }, note) : todoCard(() {
-                          Navigator.of(context).push(
+                        (note["content"] is String) ? Dismissible(
+                          key: Key(note.id),
+                          onDismissed: (direction) async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: const Text('Are you sure you want to delete this note?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() { });
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      model.deleteNoteToDo(note.id);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text("Item deleted")),
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: noteCard(() {
+                            Navigator.of(context).push(
                               MaterialPageRoute(
-                                  builder: (context) {
-                                    return ToDoEditor(doc: note);
-                                  }
+                                builder: (context) {
+                                  return NotesEditor(doc: note);
+                                }
                               )
-                          );
-                        }, note, showNoteAsGridView)).toList(),
+                            );
+                          }, note),
+                        ) : Dismissible(
+                          key: Key(note.id),
+                          onDismissed: (direction) async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: const Text('Are you sure you want to delete this To-Do?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      setState(() { });
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      model.deleteNoteToDo(note.id);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text("Item deleted")),
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: todoCard(() {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ToDoEditor(doc: note);
+                                }
+                              )
+                            );
+                          }, note, showNoteAsGridView),
+                        )).toList(),
                     );
                   }
                 }
