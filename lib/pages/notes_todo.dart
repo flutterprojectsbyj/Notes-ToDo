@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notes_todo/models/model.dart';
+import 'package:notes_todo/pages/notes/notes_creator.dart';
 import 'package:notes_todo/pages/notes/notes_editor.dart';
 import 'package:notes_todo/pages/notes/todo_editor.dart';
 import 'package:notes_todo/widgets/custom_modal_bottom_sheet.dart';
@@ -132,7 +133,15 @@ class _NotesToDoState extends State<NotesToDo> {
                            fontSize: 14
                        ),
                      ),
-                     onPressed: () { }
+                     onPressed: () {
+                       Navigator.of(context).push(
+                         MaterialPageRoute(
+                           builder: (context) {
+                             return const NotesCreator();
+                           }
+                         )
+                       );
+                     }
                  ),
                  ModalBottomListItem(
                      leading: const Icon(Icons.list),

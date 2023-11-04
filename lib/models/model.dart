@@ -132,6 +132,15 @@ class Model extends ChangeNotifier {
     return _userInfo;
   }
 
+  addNote(String title, String content, int colorId) async {
+    await fbStore.collection("notes${auth.currentUser?.email}").add({
+      "title": title,
+      "content": content,
+      "colorId": colorId,
+      "date": FieldValue.serverTimestamp()
+    });
+  }
+
   modifyNote(String docId, String title, String content, int colorId) async {
     await fbStore.collection("notes${auth.currentUser?.email}").doc(docId).update({
       "title": title,
